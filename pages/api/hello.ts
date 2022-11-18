@@ -2,7 +2,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const hello = (req: NextApiRequest, res: NextApiResponse) => {
-  res.status(200).json({ name: 'John Doe' })
+  const ip = req.socket.remoteAddress
+  res.status(200).json(ip)
 }
 
 export default hello
