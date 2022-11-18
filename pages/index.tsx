@@ -1,31 +1,39 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-var deferredPrompt ;
-
-function installPWA() {
-  // Show the prompt (I don't know if it is idempotent)
-  if (deferredPrompt) {
-  deferredPrompt.prompt();
-  // Wait for the user to respond to the prompt
-  deferredPrompt.userChoice
-    .then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the A2HS prompt');
-      } else {
-        console.log('User dismissed the A2HS prompt');
-      }
-      deferredPrompt = null;
-    });
-  }
-}
-
-
-  
 
 export default function Home() {
+  const [installBtn, setInstallBtn] = useState<boolean>(false)
+  const [deferredPrompt, setDeferredPrompt] = useState<any>()
+
+  useEffect(() => {
+    ; (function () {
+      window.addEventListener('beforeinstallprompt', e => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault()
+        // Stash the event so it can be triggered later.
+        setDeferredPrompt(e)
+        // Update UI notify the user they can install the PWA
+        // showInstallPromotion();
+        setInstallBtn(true)
+      })
+    })()
+  })  
+
+  function install() {
+    setInstallBtn(false)
+    deferredPrompt.prompt()
+    // Wait for the user to respond to the prompt
+    deferredPrompt.userChoice.then((choiceResult: any) => {
+      if (choiceResult.outcome === 'accepted') {
+        setInstallBtn(false)
+      } else {
+        setInstallBtn(true)
+      }
+    })
+  }
   
   return (
     <div className={styles.container}>
@@ -37,13 +45,17 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to <a href="https://icey.dev">iceCommerce</a>
         </h1>
 
         <p className={styles.description}>
-          Download the code here{' '}
-          <button onClick={installPWA}>Install</button>
+          Download the app here{' '}
         </p>
+        {installBtn ? (
+        <button onClick={() => install()} className={styles.installpwa}>Install the shop</button>
+        ) : (
+          ''
+        )}
 
       </main>
 
