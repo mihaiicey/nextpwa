@@ -49,16 +49,14 @@ export default function Home() {
         </h1>
 
         <p className={styles.description}>Download the app here </p>
-        {/* {installBtn ? ( */}
+        {installBtn ? (
           <button onClick={() => install()} className={styles.installpwa}>
             Install the shop
           </button>
-        {/*
-         ) : (
-           ""
-         )}
-        */}
-
+        ) : (
+          ""
+        )}
+        
       </main>
 
       <footer className={styles.footer}>
