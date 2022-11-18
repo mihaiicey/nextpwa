@@ -1,40 +1,39 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import { useEffect, useState } from 'react'
-
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [installBtn, setInstallBtn] = useState<boolean>(false)
-  const [deferredPrompt, setDeferredPrompt] = useState<any>()
+  const [installBtn, setInstallBtn] = useState<boolean>(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>();
 
   useEffect(() => {
-    ; (function () {
-      window.addEventListener('beforeinstallprompt', e => {
+    (function () {
+      window.addEventListener("beforeinstallprompt", (e) => {
         // Prevent the mini-infobar from appearing on mobile
-        e.preventDefault()
+        e.preventDefault();
         // Stash the event so it can be triggered later.
-        setDeferredPrompt(e)
+        setDeferredPrompt(e);
         // Update UI notify the user they can install the PWA
         // showInstallPromotion();
-        setInstallBtn(true)
-      })
-    })()
-  })  
+        setInstallBtn(true);
+      });
+    })();
+  });
 
   function install() {
-    setInstallBtn(false)
-    deferredPrompt.prompt()
+    setInstallBtn(false);
+    deferredPrompt.prompt();
     // Wait for the user to respond to the prompt
     deferredPrompt.userChoice.then((choiceResult: any) => {
-      if (choiceResult.outcome === 'accepted') {
-        setInstallBtn(false)
+      if (choiceResult.outcome === "accepted") {
+        setInstallBtn(false);
       } else {
-        setInstallBtn(true)
+        setInstallBtn(true);
       }
-    })
+    });
   }
-  
+
   return (
     <div className={styles.container}>
       <Head>
@@ -44,18 +43,21 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+
         <h1 className={styles.title}>
           Welcome to <a href="https://icey.dev">iceCommerce</a>
         </h1>
 
-        <p className={styles.description}>
-          Download the app here{' '}
-        </p>
-        {installBtn ? (
-        <button onClick={() => install()} className={styles.installpwa}>Install the shop</button>
-        ) : (
-          ''
-        )}
+        <p className={styles.description}>Download the app here </p>
+        {/* {installBtn ? ( */}
+          <button onClick={() => install()} className={styles.installpwa}>
+            Install the shop
+          </button>
+        {/*
+         ) : (
+           ""
+         )}
+        */}
 
       </main>
 
@@ -65,12 +67,12 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
