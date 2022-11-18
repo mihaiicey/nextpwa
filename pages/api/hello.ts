@@ -2,7 +2,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const hello = (req: NextApiRequest, res: NextApiResponse) => {
-  const ip = req.socket.remoteAddress
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
   res.status(200).json(ip)
 }
 
